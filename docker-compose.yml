@@ -1,0 +1,22 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: correspondencia-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: correspondencia
+      POSTGRES_USER: correspondencia
+      POSTGRES_PASSWORD: correspondencia
+    ports:
+      # 5433 en el host para no chocar con un PostgreSQL nativo de Windows en 5432.
+      - "5433:5432"
+    volumes:
+      - correspondencia_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U correspondencia -d correspondencia"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  correspondencia_pgdata:

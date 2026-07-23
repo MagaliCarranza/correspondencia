@@ -1,0 +1,231 @@
+:root {
+  --color-primario: #2c5aa0;
+  --color-primario-hover: #234780;
+  --color-borde: #d5dbe4;
+  --color-texto: #1f2937;
+  --color-fondo: #f6f8fc;
+  --color-panel: #ffffff;
+  --color-error-fondo: #fdecea;
+  --color-error-texto: #a11a1a;
+  --color-ok-fondo: #e6f4ea;
+  --color-ok-texto: #1b6a37;
+  --color-aviso-fondo: #fff4e5;
+  --color-aviso-texto: #8a5a05;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  color: var(--color-texto);
+  background: var(--color-fondo);
+}
+
+button {
+  background: var(--color-primario);
+  color: white;
+  border: none;
+  padding: 0.55rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+button:hover {
+  background: var(--color-primario-hover);
+}
+button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+input,
+select {
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--color-borde);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  width: 100%;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+label small {
+  font-weight: normal;
+  color: #6b7280;
+}
+
+.alerta {
+  padding: 0.65rem 0.85rem;
+  border-radius: 6px;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+.alerta-error {
+  background: var(--color-error-fondo);
+  color: var(--color-error-texto);
+}
+.alerta-ok {
+  background: var(--color-ok-fondo);
+  color: var(--color-ok-texto);
+}
+.alerta-aviso {
+  background: var(--color-aviso-fondo);
+  color: var(--color-aviso-texto);
+}
+
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+.login-form {
+  background: var(--color-panel);
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  width: 100%;
+  max-width: 380px;
+}
+.login-form h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.35rem;
+}
+.login-subtitle {
+  margin: 0 0 1.25rem;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+.login-form button {
+  width: 100%;
+  margin-top: 0.4rem;
+}
+
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.layout-header {
+  background: var(--color-panel);
+  border-bottom: 1px solid var(--color-borde);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.layout-brand a {
+  color: var(--color-primario);
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+.layout-nav {
+  flex: 1;
+  display: flex;
+  gap: 1rem;
+}
+.layout-nav a {
+  color: var(--color-texto);
+  text-decoration: none;
+  padding: 0.35rem 0.6rem;
+  border-radius: 5px;
+}
+.layout-nav a:hover {
+  background: var(--color-fondo);
+}
+.layout-user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+.layout-user small {
+  color: #6b7280;
+}
+.layout-user button {
+  background: transparent;
+  color: var(--color-primario);
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--color-primario);
+}
+.layout-user button:hover {
+  background: var(--color-primario);
+  color: white;
+}
+.layout-main {
+  flex: 1;
+  padding: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.form-columna {
+  background: var(--color-panel);
+  padding: 1.25rem 1.5rem;
+  border-radius: 8px;
+  max-width: 500px;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.form-inline {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.form-inline input {
+  flex: 1;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-panel);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.tabla th,
+.tabla td {
+  text-align: left;
+  padding: 0.6rem 0.85rem;
+  border-bottom: 1px solid var(--color-borde);
+  font-size: 0.9rem;
+}
+.tabla th {
+  background: var(--color-fondo);
+  font-weight: 600;
+}
+.tabla button {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.85rem;
+}
+
+.lista {
+  background: var(--color-panel);
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  list-style: none;
+}
+.lista li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-borde);
+}
+.lista li:last-child {
+  border-bottom: none;
+}
+
+.hint {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
