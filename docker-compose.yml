@@ -18,5 +18,29 @@ services:
       timeout: 5s
       retries: 10
 
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: correspondencia-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/correspondencia
+      SPRING_DATASOURCE_USERNAME: correspondencia
+      SPRING_DATASOURCE_PASSWORD: correspondencia
+      # Cambia este secreto en un despliegue real (minimo 32 caracteres).
+      CORRESPONDENCIA_SEGURIDAD_JWT_SECRETO: cambia-este-secreto-por-uno-de-al-menos-32-caracteres-por-favor
+      # Origenes permitidos para CORS (separa varios con coma).
+      CORRESPONDENCIA_SEGURIDAD_CORS_ORIGINS: http://localhost:5173
+    ports:
+      - "8080:8080"
+    profiles:
+      # Con "full" arrancas backend + db; sin ese profile solo arranca la db.
+      - full
+
 volumes:
   correspondencia_pgdata:

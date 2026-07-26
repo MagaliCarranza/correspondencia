@@ -1,12 +1,17 @@
 package com.magali.correspondencia.controller;
 
+import com.magali.correspondencia.dto.CambiarPasswordRequest;
 import com.magali.correspondencia.dto.CrearUsuarioRequest;
+import com.magali.correspondencia.dto.CrearUsuarioResponse;
+import com.magali.correspondencia.dto.MensajeroResponse;
 import com.magali.correspondencia.dto.UsuarioResponse;
 import com.magali.correspondencia.service.UsuarioService;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +33,7 @@ public class UsuarioController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UsuarioResponse crear(@Valid @RequestBody CrearUsuarioRequest request) {
+    public CrearUsuarioResponse crear(@Valid @RequestBody CrearUsuarioRequest request) {
         return usuarioService.crear(request);
     }
 
@@ -40,5 +45,25 @@ public class UsuarioController {
     @PostMapping("/{id}/desbloquear")
     public UsuarioResponse desbloquear(@PathVariable Long id) {
         return usuarioService.desbloquear(id);
+    }
+
+    @GetMapping("/mensajeros")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR', 'RECEPCIONISTA')")
+    public List<MensajeroResponse> listarMensajeros() {
+        return usuarioService.listarMensajerosActivos();
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public UsuarioResponse miPerfil(@AuthenticationPrincipal Jwt jwt) {
+        return usuarioService.obtenerPerfil(jwt.getSubject());
+    }
+
+    @PostMapping("/me/cambiar-password")
+    @PreAuthorize("isAuthenticated()")
+    public UsuarioResponse cambiarMiPassword(
+            @Valid @RequestBody CambiarPasswordRequest request,
+            @AuthenticationPrincipal Jwt jwt) {
+        return usuarioService.cambiarPassword(jwt.getSubject(), request);
     }
 }

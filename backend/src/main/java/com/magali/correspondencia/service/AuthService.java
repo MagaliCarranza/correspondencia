@@ -47,7 +47,7 @@ public class AuthService {
     @Transactional(noRollbackFor = {CredencialesInvalidasException.class, CuentaBloqueadaException.class})
     public LoginResponse login(LoginRequest request) {
         Usuario usuario = usuarioRepository.findByUsername(request.username())
-                .orElseThrow(() -> new CredencialesInvalidasException("Usuario o contrasena incorrectos"));
+                .orElseThrow(() -> new CredencialesInvalidasException("Usuario o contraseña incorrectos"));
 
         if (usuario.isBloqueada()) {
             throw new CuentaBloqueadaException(
@@ -64,7 +64,7 @@ public class AuthService {
                         "Se supero el numero maximo de intentos. La cuenta fue bloqueada.");
             }
             usuarioRepository.save(usuario);
-            throw new CredencialesInvalidasException("Usuario o contrasena incorrectos");
+            throw new CredencialesInvalidasException("Usuario o contraseña incorrectos");
         }
 
         usuario.setIntentosFallidos(0);

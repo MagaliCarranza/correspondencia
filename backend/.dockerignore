@@ -3,4 +3,8 @@ target/
 .idea/
 *.iml
 .vscode/
+.git/
+.gitignore
 HELP.md
+Dockerfile
+.dockerignore

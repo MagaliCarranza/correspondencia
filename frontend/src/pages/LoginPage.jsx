@@ -27,7 +27,7 @@ export function LoginPage() {
       if (status === 423) {
         setError(mensajeApi ?? "La cuenta esta bloqueada.");
       } else if (status === 401) {
-        setError(mensajeApi ?? "Usuario o contrasena incorrectos.");
+        setError(mensajeApi ?? "Usuario o contraseña incorrectos.");
       } else {
         setError("Error al iniciar sesion. Intenta de nuevo.");
       }
@@ -54,7 +54,7 @@ export function LoginPage() {
         </label>
 
         <label>
-          Contrasena
+          Contraseña
           <input
             type="password"
             value={password}

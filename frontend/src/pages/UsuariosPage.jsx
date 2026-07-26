@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Modal } from "../components/Modal";
 import { listarAreas } from "../services/areaService";
 import {
   crearUsuario,
@@ -23,6 +24,8 @@ export function UsuariosPage() {
   const [mensaje, setMensaje] = useState(null);
   const [error, setError] = useState(null);
   const [cargando, setCargando] = useState(false);
+  const [credenciales, setCredenciales] = useState(null);
+  const [copiado, setCopiado] = useState(false);
 
   async function recargar() {
     const [areasData, usuariosData] = await Promise.all([
@@ -47,13 +50,16 @@ export function UsuariosPage() {
     setError(null);
     setCargando(true);
     try {
-      const nuevo = await crearUsuario({
+      const resultado = await crearUsuario({
         ...form,
         areaId: Number(form.areaId),
       });
-      setMensaje(
-        `Usuario ${nuevo.username} creado. La contrasena temporal aparece en el log del backend (o se envio por correo).`,
-      );
+      setCredenciales({
+        username: resultado.usuario.username,
+        nombreCompleto: resultado.usuario.nombreCompleto,
+        passwordTemporal: resultado.passwordTemporal,
+      });
+      setCopiado(false);
       setForm(FORM_INICIAL);
       await recargar();
     } catch (err) {
@@ -79,6 +85,24 @@ export function UsuariosPage() {
     } catch {
       setError("No se pudo desbloquear la cuenta.");
     }
+  }
+
+  async function copiarPassword() {
+    if (!credenciales) return;
+    try {
+      await navigator.clipboard.writeText(credenciales.passwordTemporal);
+      setCopiado(true);
+    } catch {
+      setCopiado(false);
+    }
+  }
+
+  function cerrarCredenciales() {
+    setCredenciales(null);
+    setCopiado(false);
+    setMensaje(
+      `Usuario ${credenciales?.username} creado correctamente.`,
+    );
   }
 
   return (
@@ -182,6 +206,41 @@ export function UsuariosPage() {
           ))}
         </tbody>
       </table>
+
+      {credenciales && (
+        <Modal titulo="Usuario creado" onCerrar={cerrarCredenciales}>
+          <p>
+            Se creo la cuenta de <strong>{credenciales.nombreCompleto}</strong>.
+            Comparte estas credenciales con el usuario:{" "}
+            <strong>solo se muestran una vez</strong>.
+          </p>
+          <div className="credenciales-caja">
+            <div className="credenciales-fila">
+              <span className="credenciales-etiqueta">Usuario</span>
+              <code>{credenciales.username}</code>
+            </div>
+            <div className="credenciales-fila">
+              <span className="credenciales-etiqueta">Contraseña temporal</span>
+              <code>{credenciales.passwordTemporal}</code>
+            </div>
+          </div>
+          <p className="hint">
+            El usuario debera cambiarla en su primer inicio de sesion.
+          </p>
+          <div className="detalle-acciones">
+            <button type="button" onClick={copiarPassword}>
+              {copiado ? "Copiada!" : "Copiar contraseña"}
+            </button>
+            <button
+              type="button"
+              className="btn-secundario"
+              onClick={cerrarCredenciales}
+            >
+              Listo
+            </button>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }

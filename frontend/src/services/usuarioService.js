@@ -14,3 +14,18 @@ export async function desbloquearUsuario(id) {
   const { data } = await api.post(`/usuarios/${id}/desbloquear`);
   return data;
 }
+
+export async function listarMensajeros() {
+  const { data } = await api.get("/usuarios/mensajeros");
+  return data;
+}
+
+export async function obtenerMiPerfil() {
+  const { data } = await api.get("/usuarios/me");
+  return data;
+}
+
+export async function cambiarMiPassword(payload) {
+  const { data } = await api.post("/usuarios/me/cambiar-password", payload);
+  return data;
+}

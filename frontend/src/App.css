@@ -42,12 +42,27 @@ button:disabled {
 }
 
 input,
-select {
+select,
+textarea {
   padding: 0.5rem 0.65rem;
   border: 1px solid var(--color-borde);
   border-radius: 6px;
   font-size: 0.95rem;
   width: 100%;
+  font-family: inherit;
+}
+textarea {
+  resize: vertical;
+}
+
+.btn-secundario {
+  background: transparent;
+  color: var(--color-primario);
+  border: 1px solid var(--color-primario);
+}
+.btn-secundario:hover {
+  background: var(--color-primario);
+  color: white;
 }
 
 label {
@@ -152,6 +167,16 @@ label small {
 .layout-user small {
   color: #6b7280;
 }
+.layout-user-link {
+  color: var(--color-texto);
+  text-decoration: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: 5px;
+}
+.layout-user-link:hover {
+  background: var(--color-fondo);
+  color: var(--color-primario);
+}
 .layout-user button {
   background: transparent;
   color: var(--color-primario);
@@ -228,4 +253,199 @@ label small {
 .hint {
   color: #6b7280;
   font-size: 0.9rem;
+}
+
+.filtros {
+  background: var(--color-panel);
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.filtros-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem 1rem;
+}
+.filtros-grid label {
+  margin-bottom: 0;
+}
+.filtros-acciones {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.paginacion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.acciones-tabla {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.modal-fondo {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+.modal-contenido {
+  background: var(--color-panel);
+  border-radius: 10px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1.25rem;
+  border-bottom: 1px solid var(--color-borde);
+}
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+.modal-cerrar {
+  background: transparent;
+  color: var(--color-texto);
+  font-size: 1.6rem;
+  padding: 0 0.4rem;
+  line-height: 1;
+}
+.modal-cerrar:hover {
+  background: transparent;
+  color: var(--color-primario);
+}
+.modal-body {
+  padding: 1.25rem;
+}
+
+.detalle {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.4rem 1rem;
+  margin: 0;
+  font-size: 0.9rem;
+}
+.detalle dt {
+  color: #6b7280;
+  font-weight: 500;
+}
+.detalle dd {
+  margin: 0;
+}
+.detalle-seccion {
+  grid-column: 1 / -1;
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--color-borde);
+  font-weight: 600;
+  color: var(--color-primario);
+}
+.detalle-acciones {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-borde);
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-peligro {
+  background: var(--color-error-texto);
+  color: white;
+  border: none;
+}
+.btn-peligro:hover {
+  background: #7c1414;
+}
+
+.credenciales-caja {
+  background: var(--color-fondo);
+  border: 1px solid var(--color-borde);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.credenciales-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.credenciales-etiqueta {
+  color: #6b7280;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+.campo-password {
+  display: flex;
+  gap: 0.35rem;
+  align-items: stretch;
+}
+.campo-password input {
+  flex: 1;
+}
+.btn-visor {
+  background: transparent;
+  color: var(--color-primario);
+  border: 1px solid var(--color-borde);
+  padding: 0 0.75rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  min-width: 80px;
+}
+.btn-visor:hover {
+  background: var(--color-fondo);
+  color: var(--color-primario-hover);
+}
+
+.reglas-password {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.85rem;
+  font-size: 0.85rem;
+  display: grid;
+  gap: 0.2rem;
+}
+.reglas-password li {
+  padding-left: 0.2rem;
+}
+.regla-ok {
+  color: var(--color-ok-texto);
+}
+.regla-pendiente {
+  color: #6b7280;
+}
+
+.credenciales-caja code {
+  background: var(--color-panel);
+  padding: 0.4rem 0.75rem;
+  border-radius: 5px;
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-primario);
+  border: 1px solid var(--color-borde);
+  letter-spacing: 0.05em;
 }

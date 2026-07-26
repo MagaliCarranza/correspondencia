@@ -1,10 +1,14 @@
 package com.magali.correspondencia.service;
 
+import com.magali.correspondencia.dto.CambiarPasswordRequest;
 import com.magali.correspondencia.dto.CrearUsuarioRequest;
+import com.magali.correspondencia.dto.CrearUsuarioResponse;
+import com.magali.correspondencia.dto.MensajeroResponse;
 import com.magali.correspondencia.dto.UsuarioResponse;
 import com.magali.correspondencia.exception.RecursoNoEncontradoException;
 import com.magali.correspondencia.exception.ReglaNegocioException;
 import com.magali.correspondencia.model.Area;
+import com.magali.correspondencia.model.Rol;
 import com.magali.correspondencia.model.Usuario;
 import com.magali.correspondencia.repository.AreaRepository;
 import com.magali.correspondencia.repository.UsuarioRepository;
@@ -37,7 +41,7 @@ public class UsuarioService {
     }
 
     @Transactional
-    public UsuarioResponse crear(CrearUsuarioRequest request) {
+    public CrearUsuarioResponse crear(CrearUsuarioRequest request) {
         if (usuarioRepository.existsByUsername(request.username())) {
             throw new ReglaNegocioException("El nombre de usuario ya esta en uso");
         }
@@ -59,12 +63,9 @@ public class UsuarioService {
                 .build();
 
         Usuario guardado = usuarioRepository.save(usuario);
+        log.info("Usuario creado: {} ({})", guardado.getUsername(), guardado.getEmail());
 
-        // TODO: reemplazar por envio real de correo cuando este SMTP configurado.
-        log.info("Credenciales temporales para {}: usuario='{}', password='{}'",
-                guardado.getEmail(), guardado.getUsername(), passwordTemporal);
-
-        return mapearRespuesta(guardado);
+        return new CrearUsuarioResponse(mapearRespuesta(guardado), passwordTemporal);
     }
 
     @Transactional(readOnly = true)
@@ -72,6 +73,37 @@ public class UsuarioService {
         return usuarioRepository.findAll().stream()
                 .map(this::mapearRespuesta)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<MensajeroResponse> listarMensajerosActivos() {
+        return usuarioRepository.findByRolAndBloqueadaFalseOrderByNombreCompletoAsc(Rol.MENSAJERO).stream()
+                .map(u -> new MensajeroResponse(u.getId(), u.getNombreCompleto(), u.getUsername()))
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public UsuarioResponse obtenerPerfil(String username) {
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado"));
+        return mapearRespuesta(usuario);
+    }
+
+    @Transactional
+    public UsuarioResponse cambiarPassword(String username, CambiarPasswordRequest request) {
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado"));
+
+        if (!passwordEncoder.matches(request.passwordActual(), usuario.getPasswordHash())) {
+            throw new ReglaNegocioException("La contraseña actual no es correcta");
+        }
+        if (passwordEncoder.matches(request.passwordNueva(), usuario.getPasswordHash())) {
+            throw new ReglaNegocioException("La nueva contraseña debe ser distinta de la actual");
+        }
+
+        usuario.setPasswordHash(passwordEncoder.encode(request.passwordNueva()));
+        usuario.setDebeCambiarPassword(false);
+        return mapearRespuesta(usuarioRepository.save(usuario));
     }
 
     @Transactional

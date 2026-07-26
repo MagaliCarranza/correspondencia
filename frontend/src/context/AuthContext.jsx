@@ -37,12 +37,22 @@ export function AuthProvider({ children }) {
     setUsuario(null);
   }
 
+  function actualizarUsuario(cambios) {
+    setUsuario((actual) => {
+      if (!actual) return actual;
+      const actualizado = { ...actual, ...cambios };
+      localStorage.setItem("usuario", JSON.stringify(actualizado));
+      return actualizado;
+    });
+  }
+
   const valor = {
     usuario,
     estaAutenticado: !!usuario,
     tieneRol: (rol) => usuario?.rol === rol,
     login,
     logout,
+    actualizarUsuario,
   };
 
   return <AuthContext.Provider value={valor}>{children}</AuthContext.Provider>;
