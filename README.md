@@ -2,8 +2,6 @@
 
 Aplicacion web para registrar, distribuir, entregar, archivar y reportar la correspondencia interna y externa de una organizacion. Cubre el ciclo completo desde la recepcion hasta el archivo o anulacion, con distintos roles operativos y reportes en PDF.
 
-Proyecto de titulacion — **Magali Carranza**.
-
 ---
 
 ## Stack
@@ -89,7 +87,7 @@ Abre `http://localhost:5173`.
 |---|---|---|
 | `admin` | `admin1234` | ADMIN |
 
-Con ese usuario puedes crear el resto de cuentas (mensajeros, recepcionistas, supervisores).
+Con ese usuario se puede crear el resto de cuentas (mensajeros, recepcionistas, supervisores).
 
 ---
 
@@ -143,28 +141,6 @@ correspondencia/
 | **MENSAJERO** | Ve solo la correspondencia asignada a el en estado EN_TRAMITE. Registra la entrega (nombre de quien recibio, observaciones). |
 | **SUPERVISOR** | Consulta correspondencia, asigna mensajeros, archiva correspondencia entregada y genera reportes PDF. |
 
----
-
-## Historias de usuario cubiertas
-
-| HU | Titulo | Estado |
-|---|---|---|
-| HU-01 | Acceso al sistema (login con JWT + bloqueo por intentos fallidos) | Completo |
-| HU-02 | Gestion de usuarios y areas | Completo |
-| HU-03 | Consulta de correspondencia con filtros y paginacion | Completo |
-| HU-04 | Recepcion y registro de correspondencia (folio auto CORR-AAAA-NNNN) | Completo |
-| HU-05 | Distribucion (asignacion a mensajero) | Completo |
-| HU-06 | Seguimiento y entrega | Completo |
-| HU-07 | Archivar y anular correspondencia | Completo |
-| HU-08 | Reportes PDF con filtros | Completo |
-
-**Pendientes conocidos:**
-- Cambio de contraseña obligatorio en primer login (la bandera existe, el flujo no).
-- Recuperacion de contraseña.
-- Envio de credenciales por correo (SMTP). Actualmente se muestran en la UI al crear el usuario.
-- Adjuntos escaneados (diferido: solo se registran metadatos).
-- Tests automatizados.
-- Deploy productivo.
 
 ---
 
@@ -206,26 +182,11 @@ Todas tienen valor por defecto en `dev`. En `prod` hay que definirlas explicitam
 | `CORRESPONDENCIA_SEGURIDAD_CORS_ORIGINS` | Origenes permitidos (varios separados por coma) | `http://localhost:5173` |
 | `PORT` | Puerto del backend (Railway lo asigna dinamico) | `8080` |
 
-**Ejemplo multi-origen para CORS:**
-```
-CORRESPONDENCIA_SEGURIDAD_CORS_ORIGINS=https://correspondencia.tudominio.com,https://staging.tudominio.com
-```
-
 ---
 
 ## Migraciones de base de datos (Flyway)
 
 El esquema esta versionado en `backend/src/main/resources/db/migration/`. Cada cambio va en un archivo nuevo con nombre `V<n>__descripcion.sql`.
-
-**Regla de oro:** nunca modificar un script ya aplicado. Si te equivocaste, corriges con otro script (`V<n+1>__...sql`).
-
-**Ejemplo — agregar un estado nuevo al enum:**
-```sql
--- V2__agregar_estado_en_espera.sql
-ALTER TABLE correspondencia DROP CONSTRAINT correspondencia_estado_check;
-ALTER TABLE correspondencia ADD CONSTRAINT correspondencia_estado_check
-    CHECK (estado IN ('RECIBIDA', 'EN_TRAMITE', 'ENTREGADA', 'ARCHIVADA', 'ANULADA', 'EN_ESPERA'));
-```
 
 Al reiniciar la app, Flyway detecta el archivo nuevo y lo aplica automaticamente. Registra la ejecucion en la tabla `flyway_schema_history`.
 
@@ -305,28 +266,6 @@ RECIBIDA --> EN_TRAMITE --> ENTREGADA --> ARCHIVADA
 
 ---
 
-## Arquitectura
-
-```mermaid
-flowchart LR
-    User([Usuario])
-    subgraph Cliente
-        Frontend["Frontend<br/>React 19 + Vite<br/>localhost:5173"]
-    end
-    subgraph Servidor
-        Backend["Backend<br/>Spring Boot 4.1<br/>localhost:8080"]
-    end
-    subgraph Datos
-        DB[("PostgreSQL 16<br/>localhost:5433")]
-    end
-
-    User --> Frontend
-    Frontend -->|REST + JWT| Backend
-    Backend -->|JDBC| DB
-```
-
----
-
 ## Notas de implementacion
 
 - **JWT HS256**: el token se firma con `CORRESPONDENCIA_SEGURIDAD_JWT_SECRETO`. Expira en 120 minutos (`correspondencia.seguridad.jwt-expiracion-minutos`).
@@ -336,7 +275,3 @@ flowchart LR
 - **Perfil dev vs prod**: `dev` usa PostgreSQL local en Docker, seed automatico y logs detallados. `prod` usa variables de entorno para todo y logs conservadores.
 
 ---
-
-## Licencia y autoria
-
-Proyecto academico. Autora: Magali Carranza.
