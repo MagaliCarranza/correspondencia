@@ -6,6 +6,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { AreasPage } from "./pages/AreasPage";
 import { CorrespondenciaPage } from "./pages/CorrespondenciaPage";
 import { HomePage } from "./pages/HomePage";
+import { LandingPage } from "./pages/LandingPage";
 import { LoginPage } from "./pages/LoginPage";
 import { MisAsignacionesPage } from "./pages/MisAsignacionesPage";
 import { PerfilPage } from "./pages/PerfilPage";
@@ -18,6 +19,7 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route
             element={
@@ -26,7 +28,7 @@ function App() {
               </RutaProtegida>
             }
           >
-            <Route path="/" element={<HomePage />} />
+            <Route path="/inicio" element={<HomePage />} />
             <Route path="/perfil" element={<PerfilPage />} />
             <Route
               path="/usuarios"
@@ -70,7 +72,7 @@ function App() {
               }
             />
           </Route>
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/inicio" replace />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

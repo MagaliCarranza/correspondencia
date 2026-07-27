@@ -1,5 +1,6 @@
 package com.magali.correspondencia.controller;
 
+import com.magali.correspondencia.dto.ActualizarUsuarioRequest;
 import com.magali.correspondencia.dto.CambiarPasswordRequest;
 import com.magali.correspondencia.dto.CrearUsuarioRequest;
 import com.magali.correspondencia.dto.CrearUsuarioResponse;
@@ -15,6 +16,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -45,6 +47,19 @@ public class UsuarioController {
     @PostMapping("/{id}/desbloquear")
     public UsuarioResponse desbloquear(@PathVariable Long id) {
         return usuarioService.desbloquear(id);
+    }
+
+    @PutMapping("/{id}")
+    public UsuarioResponse actualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody ActualizarUsuarioRequest request,
+            @AuthenticationPrincipal Jwt jwt) {
+        return usuarioService.actualizar(id, request, jwt.getSubject());
+    }
+
+    @PostMapping("/{id}/resetear-password")
+    public CrearUsuarioResponse resetearPassword(@PathVariable Long id) {
+        return usuarioService.resetearPassword(id);
     }
 
     @GetMapping("/mensajeros")

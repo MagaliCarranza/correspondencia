@@ -29,3 +29,13 @@ export async function cambiarMiPassword(payload) {
   const { data } = await api.post("/usuarios/me/cambiar-password", payload);
   return data;
 }
+
+export async function actualizarUsuario(id, payload) {
+  const { data } = await api.put(`/usuarios/${id}`, payload);
+  return data;
+}
+
+export async function resetearPasswordUsuario(id) {
+  const { data } = await api.post(`/usuarios/${id}/resetear-password`);
+  return data;
+}

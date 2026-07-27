@@ -1,5 +1,6 @@
 package com.magali.correspondencia.service;
 
+import com.magali.correspondencia.dto.ActualizarUsuarioRequest;
 import com.magali.correspondencia.dto.CambiarPasswordRequest;
 import com.magali.correspondencia.dto.CrearUsuarioRequest;
 import com.magali.correspondencia.dto.CrearUsuarioResponse;
@@ -113,6 +114,46 @@ public class UsuarioService {
         usuario.setBloqueada(false);
         usuario.setIntentosFallidos(0);
         return mapearRespuesta(usuarioRepository.save(usuario));
+    }
+
+    @Transactional
+    public UsuarioResponse actualizar(Long id, ActualizarUsuarioRequest request, String usernameAdmin) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado"));
+
+        if (usuarioRepository.existsByEmailAndIdNot(request.email(), id)) {
+            throw new ReglaNegocioException("El correo electrónico ya está registrado por otro usuario");
+        }
+
+        boolean esSiMismo = usuario.getUsername().equals(usernameAdmin);
+        if (esSiMismo && usuario.getRol() == Rol.ADMIN && request.rol() != Rol.ADMIN) {
+            throw new ReglaNegocioException("No puedes quitarte a ti mismo el rol de administrador");
+        }
+
+        Area area = areaRepository.findById(request.areaId())
+                .orElseThrow(() -> new RecursoNoEncontradoException("Área no encontrada"));
+
+        usuario.setNombreCompleto(request.nombreCompleto());
+        usuario.setEmail(request.email());
+        usuario.setRol(request.rol());
+        usuario.setArea(area);
+        return mapearRespuesta(usuarioRepository.save(usuario));
+    }
+
+    @Transactional
+    public CrearUsuarioResponse resetearPassword(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado"));
+
+        String passwordTemporal = generarPasswordTemporal();
+        usuario.setPasswordHash(passwordEncoder.encode(passwordTemporal));
+        usuario.setDebeCambiarPassword(true);
+        usuario.setIntentosFallidos(0);
+        usuario.setBloqueada(false);
+
+        Usuario guardado = usuarioRepository.save(usuario);
+        log.info("Contraseña reseteada para usuario: {}", guardado.getUsername());
+        return new CrearUsuarioResponse(mapearRespuesta(guardado), passwordTemporal);
     }
 
     private String generarPasswordTemporal() {

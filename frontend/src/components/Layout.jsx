@@ -12,10 +12,10 @@ export function Layout() {
     <div className="layout">
       <header className="layout-header">
         <div className="layout-brand">
-          <Link to="/">Correspondencia</Link>
+          <Link to="/inicio">Correspondencia</Link>
         </div>
         <nav className="layout-nav">
-          <Link to="/">Inicio</Link>
+          <Link to="/inicio">Inicio</Link>
           <Link to="/correspondencia">Consulta</Link>
           {puedeRecepcionar && <Link to="/recepcion">Recepcion</Link>}
           {esMensajero && <Link to="/mis-asignaciones">Mis asignaciones</Link>}

@@ -5,10 +5,10 @@ export function RutaProtegida({ children, rolesPermitidos }) {
   const { usuario, estaAutenticado } = useAuth();
 
   if (!estaAutenticado) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
   if (rolesPermitidos && !rolesPermitidos.includes(usuario.rol)) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/inicio" replace />;
   }
   return children;
 }

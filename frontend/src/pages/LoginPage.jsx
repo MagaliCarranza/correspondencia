@@ -7,11 +7,12 @@ export function LoginPage() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [error, setError] = useState(null);
   const [cargando, setCargando] = useState(false);
 
   if (estaAutenticado) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/inicio" replace />;
   }
 
   async function onSubmit(e) {
@@ -20,7 +21,7 @@ export function LoginPage() {
     setCargando(true);
     try {
       await login(username.trim(), password);
-      navigate("/", { replace: true });
+      navigate("/inicio", { replace: true });
     } catch (err) {
       const status = err.response?.status;
       const mensajeApi = err.response?.data?.mensaje;
@@ -55,13 +56,25 @@ export function LoginPage() {
 
         <label>
           Contraseña
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
-            required
-          />
+          <div className="campo-password">
+            <input
+              type={passwordVisible ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+              required
+            />
+            <button
+              type="button"
+              className="btn-visor"
+              onClick={() => setPasswordVisible((v) => !v)}
+              aria-label={
+                passwordVisible ? "Ocultar contraseña" : "Mostrar contraseña"
+              }
+            >
+              {passwordVisible ? "Ocultar" : "Mostrar"}
+            </button>
+          </div>
         </label>
 
         {error && <div className="alerta alerta-error">{error}</div>}
